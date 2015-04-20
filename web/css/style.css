@@ -2358,17 +2358,19 @@ textarea.form-control {
 
 .fc-event {
     display: block !important;
-    cursor: pointer!important;
+    /*cursor: pointer!important;*/
     border-radius: 6px!important;
     line-height: 14px!important;
-    padding: 5px 10px!important;
+    padding: 5px 5px!important;
     background-color: #eb6c65;
     box-sizing: border-box!important;
     border: 0 !important;
 }
 
+.fc-event.holiday {background-color: #ff810c !important;}
+
 .fc-day-grid-event>.fc-content {
-    white-space: normal;
+    white-space: normal; text-align: center;
 }
 
 .thirdBlock label, .secondBlock label {
@@ -3555,7 +3557,7 @@ td.day > span {
     height: 20px;
     text-align: center;
     color: #666;
-    font-size: 8px;
+    font-size: 9px;
     display: block;
     cursor: pointer;
     position: relative;
@@ -3814,6 +3816,9 @@ background: #FFFFFF!important;
 }
 
 .schedule .fc-content-skeleton {
+    /*display: none;*/
+}
+.schedule .fc-time {
     display: none;
 }
 

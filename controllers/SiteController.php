@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Masters;
+use app\models\Schedule;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -51,48 +53,80 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
+        $masters = Masters::findAll([
+            'display' => Masters::ACTIVE,
+        ]);
+        return $this->render('index',['masters'=>$masters]);
     }
 
-    public function actionLogin()
+    public function actionUpdateDay()
     {
-        if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+
+        $request['Schedule'] = \Yii::$app->request->post();
+        if ($request['Schedule']['holiday']==1) {
+            $request['Schedule']['start_time'] = $request['Schedule']['end_time'] = NULL;
         }
+        $model = Schedule::findOne(['master_id' => $request['Schedule']['master_id'], 'date' => $request['Schedule']['date']]);
+        if (!$model) $model = new Schedule();
 
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
+        if (\Yii::$app->request->isAjax) {
+            $data['success'] = false;
 
-    public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        } else {
-            return $this->render('contact', [
-                'model' => $model,
-            ]);
+            if ($model->load($request) && $model->save()) {
+                $data['success'] = true;
+            }
+            return json_encode($data);
         }
     }
 
-    public function actionAbout()
+    public function actionFeed()
     {
-        return $this->render('about');
+
+        $request = \Yii::$app->request->post();
+
+        if (\Yii::$app->request->isAjax) {
+            $data['success'] = false;
+
+            $schedule = Schedule::find()
+                ->where(['master_id' => $request['master_id']])
+                ->asArray()
+                ->all();
+
+            $data = Schedule::items($schedule);
+
+            return json_encode($data);
+        }
+    }
+    public function actionSubmit()
+    {
+
+        $request = \Yii::$app->request->post();
+
+        if (\Yii::$app->request->isAjax) {
+            $data['success'] = false;
+            $days = $request['week_count']*7;
+            $timestamp = strtotime($request['date']);
+            $date_end = date("Y-m-d", mktime(0, 0, 0, date("m",$timestamp), date("d",$timestamp)+$days, date("Y",$timestamp)));
+            Schedule::deleteAll('date >= :date AND date < :date_end AND master_id = :master_id',[':date'=>$request['date'],':date_end'=>$date_end,':master_id'=>$request['master_id']]);
+            $cycle = $request['count'] + $request['after'];
+            for ($i=0;$i<$days;$i++) {
+                $date = date("Y-m-d", mktime(0, 0, 0, date("m",$timestamp), date("d",$timestamp)+$i, date("Y",$timestamp)));
+                $model = new Schedule();
+                $model->master_id = $request['master_id'];
+                $model->date = $date;
+                if (fmod($i,$cycle)<$request['count']) {
+                    $model->holiday = 0;
+                    $model->start_time = date("H:i:s", mktime($request['start_time'], 0, 0, 1, 1, date("Y")));
+                    $model->end_time = date("H:i:s", mktime($request['end_time'], 0, 0, 1, 1, date("Y")));
+                } else {
+                    $model->holiday = 1;
+                }
+                $model->save();
+            }
+
+            $data['success'] = true;
+
+            return json_encode($data);
+        }
     }
 }

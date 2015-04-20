@@ -5,12 +5,13 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 use yii\jui\JuiAsset;
+use yii\jui\DatePicker;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-AppAsset::register($this);
 JuiAsset::register($this);
+AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -21,6 +22,7 @@ JuiAsset::register($this);
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <meta charset="<?= Yii::$app->charset ?>">
+    <meta http-equiv="Content-Type" content="text/html; charset=<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
@@ -232,26 +234,11 @@ JuiAsset::register($this);
 
                         <div class="row">
                             <div class="col-md-3">
-                                <div class="mastersGraph graph">
-                                    <div class="master checked"
-                                         data-master-id="7">
-                                        <div class="photowrapper">
-                                            <img src="/images/man.png">
-                                        </div>
-                                        <div
-                                            class="name">Инна Красовская</div>
-                                        <div class="profession">Директор</div>
-                                    </div>
-                                    <div class="master"
-                                         data-master-id="9">
-                                        <div class="photowrapper">
-                                            <img src="/images/woman.png">
-                                        </div>
-                                        <div
-                                            class="name">Алиса Ваучер</div>
-                                        <div class="profession">Специалист</div>
-                                    </div>
-                                </div>
+
+                                <?=$content;?>
+
+
+
                             </div>
                             <div class="col-md-5">
                                 <div class="paddingWrap">
@@ -303,7 +290,16 @@ JuiAsset::register($this);
                                             <label class="col-sm-4 control-label">Начиная с</label>
 
                                             <div class="col-sm-6 p-xs">
-                                                <input type="text" name="shed_date" id="tpl_date" class="hasDatepicker">
+                                                <?php /*$form = ActiveForm::begin(); */?>
+                                                <!--<input type="text" name="shed_date" id="tpl_date" class="hasDatepicker">-->
+                                                <?php
+                                                echo DatePicker::widget([
+                                                    'name'  => 'shed_date',
+                                                    'value'  => date('Y-m-d'),
+                                                    'language' => 'ru',
+                                                    'dateFormat' => 'yyyy-MM-dd',
+                                                ]); ?>
+                                                <?php /*ActiveForm::end();*/ ?>
                                             </div>
                                         </div>
                                         <div class="form-group">
