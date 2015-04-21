@@ -6,6 +6,7 @@ use app\models\Masters;
 use app\models\Schedule;
 use Yii;
 use yii\filters\AccessControl;
+use yii\validators\DateValidator;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -61,16 +62,20 @@ class SiteController extends Controller
 
     public function actionUpdateDay()
     {
-
+        $data['success'] = false;
         $request['Schedule'] = \Yii::$app->request->post();
         if ($request['Schedule']['holiday']==1) {
             $request['Schedule']['start_time'] = $request['Schedule']['end_time'] = NULL;
+        } else {
+            if ($request['Schedule']['start_time']>=$request['Schedule']['end_time'])
+                $data['data'] = 'Окончание времени работы должно быть больше начала работы';
+            return json_encode($data);
         }
         $model = Schedule::findOne(['master_id' => $request['Schedule']['master_id'], 'date' => $request['Schedule']['date']]);
         if (!$model) $model = new Schedule();
 
         if (\Yii::$app->request->isAjax) {
-            $data['success'] = false;
+
 
             if ($model->load($request) && $model->save()) {
                 $data['success'] = true;
@@ -88,7 +93,7 @@ class SiteController extends Controller
             $data['success'] = false;
 
             $schedule = Schedule::find()
-                ->where(['master_id' => $request['master_id']])
+                ->where('date >= :start AND date < :end AND master_id = :master_id',[':start'=>$request['start'],':end'=>$request['end'],':master_id'=>$request['master_id']])
                 ->asArray()
                 ->all();
 
@@ -99,11 +104,20 @@ class SiteController extends Controller
     }
     public function actionSubmit()
     {
-
+        $data['success'] = false;
         $request = \Yii::$app->request->post();
+        $validator = new DateValidator();
+        $validator->format = 'php:Y-m-d';
+
+        if (!$validator->validate($request['date']))
+            $data['data'] = 'Неверный формат даты "Начиная с"';
+
+        if ($request['start_time']>=$request['end_time'])
+            $data['data'] = 'Окончание времени работы должно быть больше начала работы';
+
+        if (isset($data['data'])) return json_encode($data);
 
         if (\Yii::$app->request->isAjax) {
-            $data['success'] = false;
             $days = $request['week_count']*7;
             $timestamp = strtotime($request['date']);
             $date_end = date("Y-m-d", mktime(0, 0, 0, date("m",$timestamp), date("d",$timestamp)+$days, date("Y",$timestamp)));
