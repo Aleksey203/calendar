@@ -37,9 +37,9 @@ $(function () {
 		},
 		firstDay: 1,
 		events: {
-			url: '/site/feed/',
+			url: '/index.php?r=site/feed/',
 			type: 'POST',
-			data: function() { // a function that returns an object
+			data: function() {  // a function that returns an object
 				return {
 					master_id: $('.master.checked').data('master-id')
 				};
@@ -49,7 +49,7 @@ $(function () {
 			},
 			color: '#00A8FF',   // a non-ajax option
 			textColor: 'white' // a non-ajax option
-		},
+         },
 		dayRender: function(date, cell){
 			cell.addClass('day');
 
@@ -68,7 +68,7 @@ $(function () {
 
 var schedule = {
 	updateDay: function(master_id, date, holiday, start_time, end_time){
-        var urlUpdateDay = '/site/update-day/';
+        var urlUpdateDay = '/index.php?r=site/update-day';
 		$.ajax({
 			url: urlUpdateDay,
 			type: 'POST',

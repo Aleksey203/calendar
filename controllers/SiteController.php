@@ -63,34 +63,39 @@ class SiteController extends Controller
     public function actionUpdateDay()
     {
         $data['success'] = false;
+        $data['data'] = 'Начало';
         $request['Schedule'] = \Yii::$app->request->post();
+        $data['data'] = 'Начало после';
         if ($request['Schedule']['holiday']==1) {
             $request['Schedule']['start_time'] = $request['Schedule']['end_time'] = NULL;
+            $data['data'] = 'holiday';
         } else {
-            if ($request['Schedule']['start_time']>=$request['Schedule']['end_time'])
+            $data['data'] = 'Начало после после';
+            if ($request['Schedule']['start_time']>=$request['Schedule']['end_time']) {
                 $data['data'] = 'Окончание времени работы должно быть больше начала работы';
-            return json_encode($data);
+                return json_encode($data);
+            }
         }
+        $data['data'] = 'Середина';
         $model = Schedule::findOne(['master_id' => $request['Schedule']['master_id'], 'date' => $request['Schedule']['date']]);
         if (!$model) $model = new Schedule();
-
+        $data['data'] = 'Середина после';
         if (\Yii::$app->request->isAjax) {
 
 
             if ($model->load($request) && $model->save()) {
                 $data['success'] = true;
-            }
+            } else $data['data'] = 'Неудачное сохранение';
             return json_encode($data);
         }
     }
 
     public function actionFeed()
     {
-
+        $data['success'] = false;
         $request = \Yii::$app->request->post();
 
         if (\Yii::$app->request->isAjax) {
-            $data['success'] = false;
 
             $schedule = Schedule::find()
                 ->where('date >= :start AND date < :end AND master_id = :master_id',[':start'=>$request['start'],':end'=>$request['end'],':master_id'=>$request['master_id']])
@@ -99,11 +104,12 @@ class SiteController extends Controller
 
             $data = Schedule::items($schedule);
 
-            return json_encode($data);
         }
+        return json_encode($data);
     }
     public function actionSubmit()
     {
+        //return 1;
         $data['success'] = false;
         $request = \Yii::$app->request->post();
         $validator = new DateValidator();
