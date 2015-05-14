@@ -17,7 +17,7 @@ $(document).ready(function () {
         var end_time = $('#shed_pat_time_end_id').val();
         var week_count = $('select[name="shed_pat_week_count"]').val();
         $.ajax({
-            url: '/site/submit/',
+            url: '/index.php?r=site/submit',
             type: 'POST',
             dataType: 'json',
             data: {
@@ -29,7 +29,7 @@ $(document).ready(function () {
                 start_time: start_time,
                 end_time: end_time
             },
-            success: function(data) {
+            success: function(data) { //alert('data =' + data);
                 if (data.success) {
                     $('#schedule').fullCalendar('refetchEvents');
                 } else {

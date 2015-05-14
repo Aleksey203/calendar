@@ -43,7 +43,7 @@ AppAsset::register($this);
         <div class="adminStatus">Администратор</div>
         <div class='moneyNow'>В кассе: <a href=""> 500 р.</a> </div>
     </div>
-    <div class='sideBarNav'>
+    <!--<div class='sideBarNav'>
         <ul>
             <li class='active tab1 '><i class="fa fa-sliders"></i></li>
             <li class='tab2 '><i class="fa fa-smile-o "></i></li>
@@ -56,12 +56,12 @@ AppAsset::register($this);
                 <i class="fa fa-calendar"></i>
             </li>
         </ul>
-    </div>
+    </div>-->
     <nav class="menu">
         <div class='sideBarSettings tabs tab1'>
             <p>Основоное меню</p>
             <ul>
-                <li>
+                <!-- <li>
                     <a href="/calendar" class="">
                         <i class="fa fa-calendar-o"></i>Календарь и задачи
                     </a>
@@ -116,7 +116,7 @@ AppAsset::register($this);
                         <li><a href="/income-and-expense">Статьи доходов и расходов</a></li>
                     </ul>
                 </li>
-                <!-- <li>
+                <li>
                     <span><i class="fa fa-leanpub"></i> Склад</span>
                     <ul>
                         <li><a href="">Поступление товаров</a>
@@ -134,7 +134,7 @@ AppAsset::register($this);
                     </a>
                 </li>
 
-                <li>
+                <!--<li>
                     <span><i class="fa fa-cogs"></i> Настройки<i class="arr fa fa-angle-left"></i></span>
                     <ul>
                         <li>
@@ -163,7 +163,7 @@ AppAsset::register($this);
 
                         <li><a href="">Интеграция на сайт</a></li>
                     </ul>
-                </li>
+                </li>-->
             </ul>
         </div>
         <div class='workToday tab2 tabs none'>
@@ -195,7 +195,7 @@ AppAsset::register($this);
     <div class="header__logo">
         <a href="/" class="header__logo-link">Alpha Clients</a>
     </div>
-    <article class="profile">
+    <!--<article class="profile">
         <ul>
             <li>
                 <a href="/support"><i class="fa fa-life-ring"></i>Поддержка</a>
@@ -210,7 +210,7 @@ AppAsset::register($this);
                 <a rel="nofollow" data-method="delete" href="/logout" class="active"><i class="fa fa-sign-out"></i>Выход</a>
             </li>
         </ul>
-    </article>
+    </article>-->
 
 </header>                <div id="content">
 
