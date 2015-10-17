@@ -1,6 +1,6 @@
 Реализация проекта "Выставление графиков работ для мастеров"
 
-Демо: http://test1.berlinsky.ru/
+Демо: http://test2.berlinsky.ru/
 
 Исрользовался Yii2, MySQL, JQuery
 
